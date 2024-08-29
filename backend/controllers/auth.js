@@ -1,6 +1,5 @@
 import { BadRequestError } from '../errors/bad-request.js';
 import { StatusCodes } from 'http-status-codes';
-import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { UnauthenticatedError } from '../errors/unauthenticated.js';
 
@@ -32,6 +31,13 @@ const login = async (req, res) => {
 
 	// if no user, throw error
 	if (!user) throw new UnauthenticatedError('Invalid credentials');
+
+	// check if password entered is correct when compared to password in db
+	const isPasswordCorrect = await user.comparePassword(password);
+
+	// throw error if password is incorrect
+	if (!isPasswordCorrect)
+		throw new UnauthenticatedError('Invalid credentials');
 
 	// else if user, create JWT using OOP method from User Model
 	const token = user.createJWT();

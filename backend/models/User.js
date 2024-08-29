@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
-import { genSalt, hash } from 'bcrypt';
+import { genSalt, hash, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
 	username: {
 		type: String,
 		required: [true, 'Please provide a name'],
@@ -29,7 +29,7 @@ const userSchema = new Schema({
 });
 
 // before we save the userSchema to the mongoDB, we carry out the following
-userSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function (next) {
 	// implement salt to power of 10
 	const salt = await genSalt(10);
 
@@ -41,7 +41,7 @@ userSchema.pre('save', async function (next) {
 });
 
 // define a createJWT function using OOP
-userSchema.methods.createJWT = function () {
+UserSchema.methods.createJWT = function () {
 	return jwt.sign(
 		{
 			userId: this._id,
@@ -53,4 +53,10 @@ userSchema.methods.createJWT = function () {
 	);
 };
 
-export default mongoose.model('User', userSchema);
+// use this to compare password entered during login to password in the db
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+	const isMatch = await compare(candidatePassword, this.password);
+	return isMatch;
+};
+
+export default mongoose.model('User', UserSchema);

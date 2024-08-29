@@ -1,24 +1,15 @@
 import express from 'express';
-import {
-	createProduct,
-	getProducts,
-	getSingleProduct,
-	updateSingleProduct,
-	deleteSingleProduct,
-} from '../controllers/products.js';
-import { authenticationMiddleware } from '../middleware/auth.js';
+import { createProduct } from '../controllers/products.js';
 
 const router = express.Router();
 
-router
-	.route('/products')
-	.get(authenticationMiddleware, getProducts)
-	.post(authenticationMiddleware, createProduct);
+// route all the product endpoints
+router.route('/products').post(createProduct);
 
-router
-	.route('/products/:productID')
-	.get(authenticationMiddleware, getSingleProduct)
-	.put(authenticationMiddleware, updateSingleProduct)
-	.delete(authenticationMiddleware, deleteSingleProduct);
+// router
+// 	.route('/products/:productID')
+// 	.get(getSingleProduct)
+// 	.put(updateSingleProduct)
+// 	.delete(deleteSingleProduct);
 
 export default router;
