@@ -1,20 +1,19 @@
 import User from '../models/User.js';
-import { asyncWrapper } from '../middleware/async.js';
 
 // GET endpoint
-const getUsers = asyncWrapper(async (req, res) => {
+const getUsers = async (req, res) => {
 	const users = await User.find();
 	res.status(200).json({ success: true, data: users });
-});
+};
 
 // POST endpoint
-const createUser = asyncWrapper(async (req, res) => {
+const createUser = async (req, res) => {
 	const user = await User.create(req.body);
 	res.status(200).json({ user });
-});
+};
 
 // GET single user endpoint
-const getSingleUser = asyncWrapper(async (req, res) => {
+const getSingleUser = async (req, res) => {
 	const { userID } = req.params;
 
 	const singleUser = await User.findById({ _id: userID });
@@ -24,10 +23,10 @@ const getSingleUser = asyncWrapper(async (req, res) => {
 	}
 
 	res.status(200).json({ singleUser });
-});
+};
 
 // PUT single user endpoint
-const updateSingleUser = asyncWrapper(async (req, res) => {
+const updateSingleUser = async (req, res) => {
 	// get user based on id
 	const { userID } = req.params;
 
@@ -48,10 +47,10 @@ const updateSingleUser = asyncWrapper(async (req, res) => {
 
 	// if user exist
 	res.status(201).json({ updatedUser });
-});
+};
 
 // DELETE single user endpoint
-const deleteSingleUser = asyncWrapper(async (req, res) => {
+const deleteSingleUser = async (req, res) => {
 	// get user based on id
 	const { userID } = req.params;
 
@@ -65,7 +64,7 @@ const deleteSingleUser = asyncWrapper(async (req, res) => {
 
 	// if user exist
 	res.status(200).json({ msg: `user with id ${userID} deleted` });
-});
+};
 
 export {
 	getUsers,

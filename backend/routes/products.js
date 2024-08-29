@@ -6,15 +6,19 @@ import {
 	updateSingleProduct,
 	deleteSingleProduct,
 } from '../controllers/products.js';
+import { authenticationMiddleware } from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.route('/products').get(getProducts).post(createProduct);
+router
+	.route('/products')
+	.get(authenticationMiddleware, getProducts)
+	.post(authenticationMiddleware, createProduct);
 
 router
 	.route('/products/:productID')
-	.get(getSingleProduct)
-	.put(updateSingleProduct)
-	.delete(deleteSingleProduct);
+	.get(authenticationMiddleware, getSingleProduct)
+	.put(authenticationMiddleware, updateSingleProduct)
+	.delete(authenticationMiddleware, deleteSingleProduct);
 
 export default router;
