@@ -6,6 +6,7 @@ import user from './routes/users.js';
 import product from './routes/products.js';
 import { connectDB } from './db/connect.js';
 import { port } from './config/environment.js';
+import { notFound } from './middleware/not-found.js';
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(express.json());
 // add router
 app.use('/api/v1', user);
 app.use('/api/v1', product);
+app.use(notFound);
 
 // "/" refers to localhost:5000
 app.get('/', (req, res) => res.send('Home page'));
