@@ -3,10 +3,8 @@ import dotenv from 'dotenv';
 
 /* we do not need try/catch block repeated and asyncWrappers */
 import 'express-async-errors';
-// import from routes
-// import people from './routes/peoples.js';
-import user from './routes/users.js';
-import product from './routes/products.js';
+
+import productRouter from './routes/products.js';
 import { connectDB } from './db/connect.js';
 import { port } from './config/environment.js';
 import { notFound } from './middleware/not-found.js';
@@ -20,20 +18,16 @@ const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-// added router "people" to our base route
-// app.use('/api/people', people);
+// add router, "/api/v1" is the base route
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1', productRouter);
 
-// add router
-app.use('/api/v1', user);
-app.use('/api/v1', product);
-
+// Error handlers
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
 // "/" refers to localhost:5000
 app.get('/', (req, res) => res.send('Home page'));
-
-app.get('/about', (req, res) => res.send('About page'));
 
 const start = async () => {
 	try {
