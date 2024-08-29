@@ -10,17 +10,22 @@ import { port } from './config/environment.js';
 import { notFound } from './middleware/not-found.js';
 import authRouter from './routes/auth.js';
 import { errorHandlerMiddleware } from './middleware/error-handler.js';
+import { authenticationMiddleware } from './middleware/auth.js';
 
 dotenv.config();
 
+// invoke express app
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
+// gets the body of the all forms
 app.use(express.json());
 
 // add router, "/api/v1" is the base route
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1', productRouter);
+
+// must be authenticated before viewing any product endpoints
+app.use('/api/v1', authenticationMiddleware, productRouter);
 
 // Error handlers
 app.use(notFound);

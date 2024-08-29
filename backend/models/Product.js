@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const productSchema = new Schema(
+const ProductSchema = new Schema(
 	{
 		amountAvailable: {
 			type: String,
@@ -25,4 +25,4 @@ const productSchema = new Schema(
 	{ timestamps: true }
 );
 
-export default mongoose.model('Product', productSchema);
+export default mongoose.model('Product', ProductSchema);
