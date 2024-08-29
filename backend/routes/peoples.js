@@ -4,7 +4,8 @@ import {
 	postPerson,
 	updateSinglePerson,
 	deleteSinglePerson,
-} from '../controllers/people.js';
+} from '../controllers/peoples.js';
+
 const router = express.Router();
 
 router.route('/').get(getPeople).post(postPerson);
