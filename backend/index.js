@@ -1,6 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
-
+import helmet from 'helmet';
+import { rateLimit } from 'express-rate-limit';
+import cors from 'cors';
 /* we do not need try/catch block repeated and asyncWrappers */
 import 'express-async-errors';
 
@@ -17,9 +19,24 @@ dotenv.config();
 // invoke express app
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
+// rateLimit configuration, limits number of calls to API //
+app.use(
+	rateLimit({
+		windowMs: 15 * 60 * 60 * 1000, // using 15 mins
+		max: 100, // limit each IP to 100 requests per windowMs
+	})
+);
+
 // gets the body of the all forms
 app.use(express.json());
+
+// helmet to secure express apps
+app.use(helmet());
+// cors for sorting pre-flight request
+app.use(cors());
+
+// "/" refers to localhost:5000
+app.get('/', (req, res) => res.send('Home page'));
 
 // add router, "/api/v1" is the base route
 app.use('/api/v1/auth', authRouter);
@@ -30,9 +47,6 @@ app.use('/api/v1', authenticationMiddleware, productRouter);
 // Error handlers
 app.use(notFound);
 app.use(errorHandlerMiddleware);
-
-// "/" refers to localhost:5000
-app.get('/', (req, res) => res.send('Home page'));
 
 const start = async () => {
 	try {
