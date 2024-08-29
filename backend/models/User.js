@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+
+// bcrypt for hashing and salting (encrypting) passwords
 import { genSalt, hash, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
