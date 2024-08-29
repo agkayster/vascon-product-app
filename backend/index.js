@@ -1,5 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv';
+
+/* we do not need try/catch block repeated and asyncWrappers */
+import 'express-async-errors';
 // import from routes
 // import people from './routes/peoples.js';
 import user from './routes/users.js';
@@ -7,6 +10,8 @@ import product from './routes/products.js';
 import { connectDB } from './db/connect.js';
 import { port } from './config/environment.js';
 import { notFound } from './middleware/not-found.js';
+import authRouter from './routes/auth.js';
+import { errorHandlerMiddleware } from './middleware/error-handler.js';
 
 dotenv.config();
 
@@ -21,7 +26,9 @@ app.use(express.json());
 // add router
 app.use('/api/v1', user);
 app.use('/api/v1', product);
+
 app.use(notFound);
+app.use(errorHandlerMiddleware);
 
 // "/" refers to localhost:5000
 app.get('/', (req, res) => res.send('Home page'));
