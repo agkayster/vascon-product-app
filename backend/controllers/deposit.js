@@ -32,8 +32,6 @@ const deposit = async (req, res) => {
 		{ new: true, runValidators: true }
 	);
 
-	console.log('update deposit user =>', updateDepositUser);
-
 	res.status(StatusCodes.CREATED).json({ updateDepositUser });
 };
 

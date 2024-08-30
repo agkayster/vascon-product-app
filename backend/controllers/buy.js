@@ -12,7 +12,6 @@ const buy = async (req, res) => {
 	} = req;
 
 	const getBuyUser = await User.findOne({ _id: userId, role: 'buyer' });
-	console.log('get buy user =>', getBuyUser);
 
 	if (!getBuyUser) {
 		throw new NotFoundError('User not found');
@@ -21,7 +20,6 @@ const buy = async (req, res) => {
 	const getProductToBuy = await Product.findOne({
 		cost: { $lt: 50 },
 	});
-	console.log('get product to buy =>', getProductToBuy);
 
 	res.send('buy endpoint');
 };
