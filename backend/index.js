@@ -48,6 +48,7 @@ app.use('/api/v1', authenticationMiddleware, productRouter);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
+// connects to db first and then listen to server port
 const start = async () => {
 	try {
 		await connectDB(process.env.MONGO_URI);
