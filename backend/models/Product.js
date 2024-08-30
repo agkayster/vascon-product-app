@@ -16,7 +16,7 @@ const ProductSchema = new Schema(
 		createdAt: { type: Date, default: Date.now() },
 
 		// references the User Model //
-		createdBy: {
+		sellerID: {
 			type: mongoose.Types.ObjectId,
 			ref: 'User', // ref means the schema we are referencing. to get the user who created a job, we take the schema from the User schema //
 			required: [true, 'Please provide a user'],

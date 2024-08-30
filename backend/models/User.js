@@ -44,6 +44,7 @@ UserSchema.pre('save', async function (next) {
 
 // define a createJWT function using OOP
 UserSchema.methods.createJWT = function () {
+	// jwt gives us a header, payload and signature
 	return jwt.sign(
 		{
 			userId: this._id,
