@@ -19,7 +19,7 @@ dotenv.config();
 // invoke express app
 const app = express();
 
-// rateLimit configuration, limits number of calls to API //
+// rateLimit configuration, limits number of calls to API *security //
 app.use(
 	rateLimit({
 		windowMs: 15 * 60 * 60 * 1000, // using 15 mins
@@ -30,10 +30,10 @@ app.use(
 // gets the body of the all forms
 app.use(express.json());
 
-// helmet to secure express apps
-app.use(helmet());
-// cors for sorting pre-flight request
+// cors for sorting pre-flight request *security
 app.use(cors());
+// helmet to secure express apps *security
+app.use(helmet());
 
 // "/" refers to localhost:5000
 app.get('/', (req, res) => res.send('Home page'));
