@@ -50,6 +50,7 @@ const updateSingleProduct = async (req, res) => {
 	// destructure amountAvailable, cost and productName in product model from req.body (form)
 	// destructure userId from req.user (userId is from authentication)
 	// desctructure productID from req.params
+	console.log('get user role =>', req.body);
 
 	const {
 		user: { userId },
