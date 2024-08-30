@@ -17,7 +17,10 @@ const authenticationMiddleware = async (req, res, next) => {
 		const payload = jwt.verify(token, process.env.JWT_SECRET);
 
 		// attach the user info from the payload to the product routes //
-		req.user = { userId: payload.userId, username: payload.username };
+		req.user = {
+			userId: payload.userId,
+			username: payload.username,
+		};
 		next();
 	} catch (error) {
 		throw new UnauthenticatedError('Not authorised to access this route');

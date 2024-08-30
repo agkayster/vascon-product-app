@@ -6,29 +6,33 @@ import jwt from 'jsonwebtoken';
 
 const { Schema } = mongoose;
 
-const UserSchema = new Schema({
-	username: {
-		type: String,
-		required: [true, 'Please provide a name'],
-		minlength: 3,
-		maxlength: 50,
+const UserSchema = new Schema(
+	{
+		username: {
+			type: String,
+			required: [true, 'Please provide a name'],
+			minlength: 3,
+			maxlength: 50,
+		},
+		password: {
+			type: String,
+			required: [true, 'Please provide a password'],
+			minlength: 6,
+		},
+		deposit: {
+			type: Number,
+		},
+		role: {
+			type: String,
+			enum: {
+				values: ['seller', 'buyer'],
+				message: '{VALUE} is not supported',
+			}, // message is error message in case the user provides a value outside the "enum" values array //
+		},
 	},
-	password: {
-		type: String,
-		required: [true, 'Please provide a password'],
-		minlength: 6,
-	},
-	deposit: {
-		type: Number,
-	},
-	role: {
-		type: String,
-		enum: {
-			values: ['seller', 'buyer'],
-			message: '{VALUE} is not supported',
-		}, // message is error message in case the user provides a value outside the "enum" values array //
-	},
-});
+	// allows you to add new properties to mongoDB
+	{ strict: false }
+);
 
 // before we save the userSchema to the mongoDB, we carry out the following
 UserSchema.pre('save', async function (next) {

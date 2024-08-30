@@ -7,6 +7,8 @@ import cors from 'cors';
 import 'express-async-errors';
 
 import productRouter from './routes/products.js';
+import depositRouter from './routes/deposit.js';
+import buyRouter from './routes/buy.js';
 import { connectDB } from './db/connect.js';
 import { port } from './config/environment.js';
 import { notFound } from './middleware/not-found.js';
@@ -41,12 +43,16 @@ app.get('/', (req, res) => res.send('Home page'));
 // add router, "/api/v1" is the base route
 app.use('/api/v1/auth', authRouter);
 
+app.use('/api/v1/', authenticationMiddleware, depositRouter);
+
+app.use('/api/v1/', authenticationMiddleware, buyRouter);
+
 // must be authenticated before viewing any product endpoints
 app.use('/api/v1', authenticationMiddleware, productRouter);
 
 // Error handlers
 app.use(notFound);
-app.use(errorHandlerMiddleware);
+// app.use(errorHandlerMiddleware);
 
 // connects to db first and then listen to server port
 const start = async () => {
