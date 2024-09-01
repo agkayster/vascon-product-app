@@ -1,7 +1,13 @@
+import IntroductionPage from './components/Introduction';
+import SolutionsComponent from './components/Solutions';
+import FeaturesComponent from './components/Features';
+
 export default function Home() {
 	return (
-		<main className='flex min-h-screen flex-col items-center justify-between p-24'>
-			<h1 className=''>Hello World</h1>
+		<main className='bg-blue-500 min-h-full'>
+			<IntroductionPage />
+			<SolutionsComponent />
+			<FeaturesComponent />
 		</main>
 	);
 }
