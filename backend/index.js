@@ -48,11 +48,12 @@ app.use('/api/v1/', authenticationMiddleware, depositRouter);
 app.use('/api/v1/', authenticationMiddleware, buyRouter);
 
 // must be authenticated before viewing any product endpoints
+// app.use('/api/v1', productRouter);
 app.use('/api/v1', authenticationMiddleware, productRouter);
 
 // Error handlers
 app.use(notFound);
-// app.use(errorHandlerMiddleware);
+app.use(errorHandlerMiddleware);
 
 // connects to db first and then listen to server port
 const start = async () => {
