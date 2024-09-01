@@ -1,7 +1,7 @@
 import { Ubuntu } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 import './globals.css';
 

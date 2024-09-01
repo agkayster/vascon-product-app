@@ -1,6 +1,6 @@
-import IntroductionPage from './components/Introduction';
-import SolutionsComponent from './components/Solutions';
-import FeaturesComponent from './components/Features';
+import IntroductionPage from '../components/Introduction';
+import SolutionsComponent from '../components/Solutions';
+import FeaturesComponent from '../components/Features';
 
 export default function Home() {
 	return (

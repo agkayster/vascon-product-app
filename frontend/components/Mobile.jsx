@@ -16,6 +16,11 @@ const links = [
 		title: 'Contact',
 		url: '/contact',
 	},
+	{
+		id: 3,
+		title: 'Register',
+		url: '/register',
+	},
 ];
 
 const Menu = () => {
