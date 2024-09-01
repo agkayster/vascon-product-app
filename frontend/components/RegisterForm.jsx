@@ -1,6 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,25 +35,54 @@ const formSchema = z.object({
 		.min(2, 'Username should be at least 2 characters long')
 		.max(50, 'Username should not be more than 50 characters long'),
 	password: z.string(),
-	deposit: z.string(),
+	deposit: z.coerce.number(),
 	role: z.string(),
 });
 
 const RegisterForm = () => {
+	const [isLoading, setIsLoading] = useState(false);
+
+	const router = useRouter();
+
 	// 1. Define your form.
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			username: '',
+			password: '',
+			deposit: '',
+			role: '',
 		},
 	});
 
 	// 2. Define a submit handler.
-	function onSubmit(values) {
+	const onSubmit = async ({ username, password, deposit, role }) => {
+		setIsLoading(true);
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
-		console.log(values);
-	}
+		console.log(username, password, deposit, role);
+
+		try {
+			const userData = { username, password, deposit, role };
+
+			const res = await fetch(
+				'http://localhost:5000/api/v1/auth/register',
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(userData),
+				}
+			);
+			const data = await res.json();
+
+			data && router.push('/login');
+		} catch (err) {
+			console.log('get register error =>', err);
+		}
+		setIsLoading(false);
+	};
 
 	return (
 		<div>
@@ -102,12 +132,17 @@ const RegisterForm = () => {
 					/>
 					<FormField
 						control={form.control}
-						name='Deposit'
+						name='deposit'
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Deposit</FormLabel>
 								<FormControl>
-									<Input className='w-64' {...field} />
+									<Input
+										type='number'
+										placeholder='0'
+										className='w-64'
+										{...field}
+									/>
 								</FormControl>
 								{/* <FormDescription>
 									This is your public display name.
@@ -143,7 +178,9 @@ const RegisterForm = () => {
 							</FormItem>
 						)}
 					/>
-					<Button type='submit'>Submit</Button>
+					<Button type='submit'>
+						{isLoading ? 'Loading...' : 'Submit'}
+					</Button>
 				</form>
 			</Form>
 		</div>

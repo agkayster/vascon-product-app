@@ -1,10 +1,11 @@
 'use client';
-import React from 'react';
-import Link from 'next/link';
+import React, { useState, useContext } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { AuthContext, ACTIONS } from '@/app/Providers';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,16 +19,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
-
 const formSchema = z.object({
 	username: z
 		.string()
@@ -37,6 +28,11 @@ const formSchema = z.object({
 });
 
 const LoginForm = () => {
+	const [isLoading, setIsLoading] = useState(false);
+	const { dispatch } = useContext(AuthContext);
+
+	const router = useRouter();
+
 	// 1. Define your form.
 	const form = useForm({
 		resolver: zodResolver(formSchema),
@@ -46,12 +42,38 @@ const LoginForm = () => {
 		},
 	});
 
-	// 2. Define a submit handler.
-	function onSubmit(values) {
+	// 2. Define a submit handler. destructure value
+	const onSubmit = async ({ username, password }) => {
+		setIsLoading(true);
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
-		console.log(values);
-	}
+		// console.log(username, password);
+
+		try {
+			const userData = { username, password };
+
+			// post login data in the form to the backend
+			const res = await fetch('http://localhost:5000/api/v1/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(userData),
+			});
+
+			// return data details
+			const data = await res.json();
+
+			// use state management
+			dispatch({ type: ACTIONS.LOGIN, payload: data });
+
+			// redirect to products page once user is authenticated
+			data.token && router.push('/products');
+		} catch (err) {
+			console.log('get register error =>', err);
+		}
+		setIsLoading(false);
+	};
 
 	return (
 		<div>
@@ -68,7 +90,7 @@ const LoginForm = () => {
 								<FormControl>
 									<Input
 										className='w-64'
-										placeholder='Enter your username...'
+										placeholder='Enter your username'
 										{...field}
 									/>
 								</FormControl>
@@ -88,7 +110,7 @@ const LoginForm = () => {
 								<FormControl>
 									<Input
 										className='w-64'
-										placeholder='Enter your password...'
+										placeholder='Enter your password'
 										{...field}
 									/>
 								</FormControl>
@@ -99,8 +121,9 @@ const LoginForm = () => {
 							</FormItem>
 						)}
 					/>
-
-					<Button type='submit'>Submit</Button>
+					<Button type='submit'>
+						{isLoading ? 'Loading...' : 'Submit'}
+					</Button>
 				</form>
 			</Form>
 		</div>

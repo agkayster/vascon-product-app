@@ -1,3 +1,4 @@
+import AuthProvider from './Providers';
 import { Ubuntu } from 'next/font/google';
 import { cn } from '@/lib/utils';
 import Navbar from '../components/Navbar';
@@ -24,7 +25,7 @@ export default function RootLayout({ children }) {
 					ubuntu.className
 				)}>
 				<Navbar />
-				{children}
+				<AuthProvider>{children}</AuthProvider>
 				<Footer />
 			</body>
 		</html>
