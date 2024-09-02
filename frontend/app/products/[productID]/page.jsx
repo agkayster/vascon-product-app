@@ -1,6 +1,7 @@
 'use client';
 import { useParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import randImage from '../../../public/assets/random-image.jpg';
 
@@ -22,9 +23,9 @@ const SingleProductComponent = () => {
 			tokenData = localStorage.getItem('token');
 			loggedName = localStorage.getItem('user');
 		}
-		tokenData && setToken(JSON.parse(tokenData));
-		loggedName && setName(JSON.parse(loggedName));
-	}, []);
+		tokenData && setToken(tokenData);
+		loggedName && setName(loggedName);
+	}, [token, name]);
 
 	useEffect(() => {
 		const getSingleProduct = async () => {
@@ -42,6 +43,8 @@ const SingleProductComponent = () => {
 				);
 				const data = await res.json();
 				setProductData(data?.data);
+				localStorage.setItem('productID', productID);
+				localStorage.setItem('productData', JSON.stringify(data?.data));
 			} catch (error) {
 				console.log('get error for single product =>', error);
 			}
@@ -148,16 +151,16 @@ const SingleProductComponent = () => {
 							if (userId === productData?.sellerID) {
 								return (
 									<div className='flex flex-row gap-2'>
-										<a
-											href='#'
+										<Link
+											href='/deleteProducts'
 											className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 											Delete Item
-										</a>
-										<a
-											href='#'
+										</Link>
+										<Link
+											href='/updateProducts'
 											className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 											Update Item
-										</a>
+										</Link>
 									</div>
 								);
 							} else {

@@ -19,9 +19,9 @@ const ProductsComponent = () => {
 			tokenData = localStorage.getItem('token');
 			loggedName = localStorage.getItem('user');
 		}
-		tokenData && setToken(JSON.parse(tokenData));
-		loggedName && setName(JSON.parse(loggedName));
-	}, []);
+		tokenData && setToken(tokenData);
+		loggedName && setName(loggedName);
+	}, [token, name]);
 
 	useEffect(() => {
 		const getAllProducts = async () => {
@@ -38,7 +38,7 @@ const ProductsComponent = () => {
 					}
 				);
 				const data = await res.json();
-				// console.log('get all products data =>', data);
+
 				setProducts(data?.products);
 			} catch (error) {
 				console.log('get error =>', error);
@@ -66,30 +66,9 @@ const ProductsComponent = () => {
 		getAllUsers();
 	}, []);
 
-	// const handleUpdateProduct = async ({ productID }) => {
-	// 	try {
-	// 		const headers = {
-	// 			Authorization: `Bearer ${token}`,
-	// 			'Content-Type': 'application/json',
-	// 		};
-	// 		const res = await fetch(
-	// 			`http://localhost:5000/api/v1/products/${productID}`,
-	// 			{
-	// 				method: 'PUT',
-	// 				headers,
-	// 			}
-	// 		);
-	// 	} catch (error) {}
-	// };
-
 	const getLoggedInUserDetails = users?.filter(
 		({ username }) => username === name
 	);
-
-	console.log('get products =>', products);
-	console.log('get users =>', users);
-	console.log('get name =>', name);
-	console.log('get logged in =>', getLoggedInUserDetails);
 
 	return (
 		<div>
@@ -97,7 +76,7 @@ const ProductsComponent = () => {
 				<h1 className='text-lg font-bold'>View All Products</h1>
 			</div>
 			<hr />
-			<div className='p-4'>
+			<div className='p-4 flex flex-col gap-4 lg:flex lg:flex-row w-full md:gap-8'>
 				{_?.map(
 					products,
 					({
@@ -107,8 +86,8 @@ const ProductsComponent = () => {
 						sellerID,
 						_id: productID,
 					}) => (
-						<Link href={`/products/${productID}`}>
-							<div className='w-full max-w-sm bg-white border border-blue-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700'>
+						<Link key={productID} href={`/products/${productID}`}>
+							<div className='w-full max-w-sm md:w-80 md:max-w-lg bg-white border border-blue-200 rounded-xl shadow dark:bg-gray-800 dark:border-gray-700'>
 								<div className='flex items-center justify-start px-5 py-3'>
 									<Image
 										src={randImage}
@@ -177,21 +156,21 @@ const ProductsComponent = () => {
 										<span className='text-3xl font-bold text-gray-900 dark:text-white'>
 											${cost}
 										</span>
-										{getLoggedInUserDetails.map(
+										{getLoggedInUserDetails?.map(
 											({ _id: userId }) => {
 												if (userId === sellerID) {
 													return (
 														<div className='flex flex-row gap-2'>
-															<a
-																href='#'
-																className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
+															<Link
+																href='href'
+																className='text-white md:w-24 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 																Delete Item
-															</a>
-															<a
+															</Link>
+															<Link
 																href='#'
-																className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
+																className='text-white md:w-24 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-2 py-2.5 lg:px-2 lg:py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 																Update Item
-															</a>
+															</Link>
 														</div>
 													);
 												} else {

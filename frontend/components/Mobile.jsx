@@ -25,9 +25,7 @@ const Menu = () => {
 	const [loaded, setLoaded] = useState(true);
 	const [user, setUser] = useState('');
 	const [auth, setAuth] = useState(null);
-	// ensure in layout.js, AuthProvider wraps Navbar component
-	const { state, dispatch } = useContext(AuthContext);
-	// console.log('get state from moble =>', state);
+	const { dispatch } = useContext(AuthContext);
 
 	const router = useRouter();
 
@@ -37,6 +35,7 @@ const Menu = () => {
 			authData = localStorage.getItem('authenticated');
 		}
 		setAuth(JSON.parse(authData));
+		// always add state changes in useEffect, to check if state has changed
 	}, []);
 
 	const handleMobileBurgerResponse = () => {
@@ -46,7 +45,6 @@ const Menu = () => {
 	const handleLogout = () => {
 		dispatch({ type: ACTIONS.LOGOUT });
 		router.push('/');
-		// location.reload();
 		setOpen(false);
 	};
 

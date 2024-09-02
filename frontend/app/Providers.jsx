@@ -23,16 +23,13 @@ const reducer = (state, actions) => {
 	const { type, payload } = actions;
 	switch (type) {
 		case ACTIONS.LOGIN:
-			localStorage.setItem('user', JSON.stringify(payload.user.name));
-			localStorage.setItem('token', JSON.stringify(payload.token));
+			localStorage.setItem('user', payload.user.name);
+			localStorage.setItem('token', payload.token);
 			localStorage.setItem(
 				'authenticated',
 				JSON.stringify({ isAuthenticated: true })
 			);
-			localStorage.setItem(
-				'role',	
-				JSON.stringify(payload.role.role)
-			);
+			localStorage.setItem('role', payload.role.role);
 			return {
 				...state,
 				isAuthenticated: true,
@@ -40,7 +37,10 @@ const reducer = (state, actions) => {
 				token: payload.token,
 			};
 		case ACTIONS.LOGOUT:
-			localStorage.clear();
+			localStorage.removeItem('role');
+			localStorage.removeItem('authenticated');
+			localStorage.removeItem('user');
+			localStorage.removeItem('token');
 			return {
 				...state,
 				isAuthenticated: false,
@@ -53,12 +53,6 @@ const reducer = (state, actions) => {
 };
 
 const AuthProvider = ({ children }) => {
-	const router = useRouter();
-
-	useEffect(() => {
-		router.refresh();
-	}, []);
-
 	// define our state and dispatch
 	const [state, dispatch] = useReducer(reducer, defaultState);
 	return (
