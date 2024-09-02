@@ -17,6 +17,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+	// AuthProvider wraps all components that need access to authentication
 	return (
 		<html lang='en'>
 			<body
@@ -24,9 +25,11 @@ export default function RootLayout({ children }) {
 					'min-h-screen ubuntu antialiased',
 					ubuntu.className
 				)}>
-				<Navbar />
-				<AuthProvider>{children}</AuthProvider>
-				<Footer />
+				<AuthProvider>
+					<Navbar />
+					{children}
+					<Footer />
+				</AuthProvider>
 			</body>
 		</html>
 	);

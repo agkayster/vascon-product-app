@@ -5,7 +5,7 @@ const { Schema } = mongoose;
 const ProductSchema = new Schema(
 	{
 		amountAvailable: {
-			type: String,
+			type: Number,
 			require: [true, 'please provide available amount'],
 		},
 

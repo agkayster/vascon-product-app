@@ -29,7 +29,8 @@ const formSchema = z.object({
 
 const LoginForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const { dispatch } = useContext(AuthContext);
+	const { dispatch, state } = useContext(AuthContext);
+	// console.log('get state in login =>', state);
 
 	const router = useRouter();
 
@@ -63,6 +64,7 @@ const LoginForm = () => {
 
 			// return data details
 			const data = await res.json();
+			console.log('get data from login =>', data);
 
 			// use state management
 			dispatch({ type: ACTIONS.LOGIN, payload: data });
