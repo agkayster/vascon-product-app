@@ -45,6 +45,7 @@ const login = async (req, res) => {
 	res.status(StatusCodes.OK).json({
 		msg: `Welcome ${user.username}`,
 		user: { name: user.username },
+		role: { role: user.role },
 		token,
 	});
 };

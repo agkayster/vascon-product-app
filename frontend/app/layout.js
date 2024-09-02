@@ -1,7 +1,8 @@
+import AuthProvider from './Providers';
 import { Ubuntu } from 'next/font/google';
 import { cn } from '@/lib/utils';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 import './globals.css';
 
@@ -16,6 +17,7 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+	// AuthProvider wraps all components that need access to authentication
 	return (
 		<html lang='en'>
 			<body
@@ -23,9 +25,11 @@ export default function RootLayout({ children }) {
 					'min-h-screen ubuntu antialiased',
 					ubuntu.className
 				)}>
-				<Navbar />
-				{children}
-				<Footer />
+				<AuthProvider>
+					<Navbar />
+					{children}
+					<Footer />
+				</AuthProvider>
 			</body>
 		</html>
 	);

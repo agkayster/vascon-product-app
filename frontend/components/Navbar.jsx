@@ -1,8 +1,11 @@
-import React from 'react';
+'use client';
+import React, { useEffect, useContext, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Mobile from './Mobile';
-import UserLinks from './Userlinks';
+import Menu from './Mobile';
+import { useRouter } from 'next/navigation';
+import UserLinks from './UserLinks';
+import { AuthContext } from '@/app/Providers';
 
 const Navbar = () => {
 	return (
@@ -18,7 +21,7 @@ const Navbar = () => {
 			</div>
 			{/* MOBILE MENU */}
 			<div className='md:hidden'>
-				<Mobile />
+				<Menu />
 			</div>
 			{/* RIGHT LINKS */}
 			<div className='hidden md:flex gap-4 items-center justify-end flex-1 md:relative'>

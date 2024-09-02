@@ -7,6 +7,7 @@ import cors from 'cors';
 import 'express-async-errors';
 
 import productRouter from './routes/products.js';
+import userRouter from './routes/user.js';
 import depositRouter from './routes/deposit.js';
 import buyRouter from './routes/buy.js';
 import { connectDB } from './db/connect.js';
@@ -41,6 +42,8 @@ app.use(helmet());
 app.get('/', (req, res) => res.send('Home page'));
 
 // add router, "/api/v1" is the base route
+// routes that do not need authentication, must be at the top most of other routes
+app.use('/api/v1', userRouter);
 app.use('/api/v1/auth', authRouter);
 
 app.use('/api/v1/', authenticationMiddleware, depositRouter);
