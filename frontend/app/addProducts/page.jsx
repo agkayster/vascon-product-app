@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import AddProductsForm from '@/components/AddProductsForm';
-import _ from 'lodash';
 import RegisterComponent from '../register/page';
 import { useRouter } from 'next/navigation';
 

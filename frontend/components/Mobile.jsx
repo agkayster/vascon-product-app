@@ -46,7 +46,7 @@ const Menu = () => {
 	const handleLogout = () => {
 		dispatch({ type: ACTIONS.LOGOUT });
 		router.push('/');
-		location.reload();
+		// location.reload();
 		setOpen(false);
 	};
 
