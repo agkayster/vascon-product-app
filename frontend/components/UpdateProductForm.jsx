@@ -26,17 +26,26 @@ const formSchema = z.object({
 		.min(4, 'Product name should be at least 4 characters long'),
 });
 
-const AddProductsForm = () => {
+const UpdateProductForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [token, setToken] = useState('');
+	const [productID, setProductID] = useState('');
+	const [storedProductData, setStoredProductData] = useState(null);
 
 	useEffect(() => {
 		let tokenData;
+		let productId;
+		let productData;
+
 		if (typeof window !== 'undefined') {
 			tokenData = localStorage.getItem('token');
+			productId = localStorage.getItem('productID');
+			productData = localStorage.getItem('productData');
 		}
 		tokenData && setToken(tokenData);
-	}, [token]);
+		productId && setProductID(productId);
+		productData && setStoredProductData(JSON.parse(productData));
+	}, [token, productID]);
 
 	const router = useRouter();
 
@@ -64,20 +73,25 @@ const AddProductsForm = () => {
 				'Content-Type': 'application/json',
 			};
 
-			const res = await fetch('http://localhost:5000/api/v1/products', {
-				method: 'POST',
-				headers,
-				body: JSON.stringify(productsData),
-			});
+			const res = await fetch(
+				`http://localhost:5000/api/v1/products/${productID}`,
+				{
+					method: 'PUT',
+					headers,
+					body: JSON.stringify(productsData),
+				}
+			);
 
 			const data = await res.json();
-			// console.log('get data from add products => ', data);
+			console.log('get data from add products => ', data);
 			data && router.push('/products');
 		} catch (error) {
 			console.log('get add products error =>', error);
 		}
 		setIsLoading(false);
 	};
+
+	console.log('get stored data =>', storedProductData);
 
 	return (
 		<div>
@@ -94,7 +108,11 @@ const AddProductsForm = () => {
 								<FormControl>
 									<Input
 										className='w-64 rounded-xl'
-										placeholder='Enter amount available'
+										placeholder={
+											storedProductData
+												? storedProductData?.amountAvailable
+												: ''
+										}
 										{...field}
 									/>
 								</FormControl>
@@ -114,7 +132,7 @@ const AddProductsForm = () => {
 								<FormControl>
 									<Input
 										className='w-64 rounded-xl'
-										placeholder='Enter cost of product'
+										placeholder={storedProductData?.cost}
 										{...field}
 									/>
 								</FormControl>
@@ -133,7 +151,9 @@ const AddProductsForm = () => {
 								<FormLabel>Product Name</FormLabel>
 								<FormControl>
 									<Input
-										placeholder='Pepsi'
+										placeholder={
+											storedProductData?.productName
+										}
 										className='w-64 rounded-xl'
 										{...field}
 									/>
@@ -154,4 +174,4 @@ const AddProductsForm = () => {
 	);
 };
 
-export default AddProductsForm;
+export default UpdateProductForm;

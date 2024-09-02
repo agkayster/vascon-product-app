@@ -3,11 +3,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ACTIONS, AuthContext } from '@/app/Providers';
 import { useRouter } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
 
 const UserLinks = () => {
-	const { dispatch, state } = useContext(AuthContext);
-	// console.log('get state from userlinks =>', state);
+	const { dispatch } = useContext(AuthContext);
+
 	const router = useRouter();
 
 	const [auth, setAuth] = useState(null);
@@ -15,21 +14,18 @@ const UserLinks = () => {
 	useEffect(() => {
 		let authData;
 		if (typeof window !== 'undefined') {
-			authData = JSON.parse(localStorage.getItem('authenticated'));
+			authData = localStorage.getItem('authenticated');
 		}
-		if (authData?.isAuthenticated) {
-			setAuth(authData);
-			// location.reload();
+		if (authData) {
+			setAuth(JSON.parse(authData));
 		}
+		// always add state changed to useEffect
 	}, []);
 
 	const handleLogout = () => {
 		dispatch({ type: ACTIONS.LOGOUT });
 		router.push('/');
-		location.reload();
 	};
-
-	// console.log('get auth data for user links =>', auth);
 
 	return (
 		<div>
