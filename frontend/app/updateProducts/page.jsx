@@ -1,26 +1,35 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import UpdateProductForm from '@/components/UpdateProductForm';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { getFromLocalStorage } from '@/lib/utils';
+
+import dynamic from 'next/dynamic';
+const RegisterComponent = dynamic(() => import('../register/page'), {
+	ssr: false,
+});
+const UpdateProductForm = dynamic(
+	() => import('@/components/UpdateProductForm'),
+	{
+		ssr: false,
+	}
+);
 
 const UpdateSingleProduct = () => {
-	const [token, setToken] = useState('');
-	const [role, setRole] = useState('');
+	const router = useRouter();
+
+	const role = JSON.parse(getFromLocalStorage('role'));
 
 	useEffect(() => {
-		let tokenData;
-		let roleData;
-
-		if (typeof window !== 'undefined') {
-			tokenData = localStorage.getItem('token');
-			roleData = localStorage.getItem('role');
-		}
-		tokenData && setToken(tokenData);
-		roleData && setRole(roleData);
-	}, [token, role]);
+		role?.role !== 'seller' && router.push('/register');
+	}, [role]);
 
 	return (
 		<div>
-			<UpdateProductForm />
+			{role?.role !== 'seller' ? (
+				<RegisterComponent />
+			) : (
+				<UpdateProductForm />
+			)}
 		</div>
 	);
 };

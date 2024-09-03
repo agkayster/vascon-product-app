@@ -70,7 +70,7 @@ const LoginForm = () => {
 			dispatch({ type: ACTIONS.LOGIN, payload: data });
 
 			// redirect to products page once user is authenticated
-			data.token && router.push('/products');
+			data?.token && router.push('/products');
 		} catch (err) {
 			console.log('get register error =>', err);
 		}

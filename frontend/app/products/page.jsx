@@ -4,24 +4,15 @@ import Link from 'next/link';
 import _ from 'lodash';
 import Image from 'next/image';
 import randImage from '../../public/assets/random-image.jpg';
+import { getFromLocalStorage } from '@/lib/utils';
 
 const ProductsComponent = () => {
 	const [products, setProducts] = useState(null);
-	const [token, setToken] = useState('');
+
 	const [users, setUsers] = useState(null);
-	const [name, setName] = useState('');
 
-	useEffect(() => {
-		let tokenData;
-		let loggedName;
-
-		if (typeof window !== 'undefined') {
-			tokenData = localStorage.getItem('token');
-			loggedName = localStorage.getItem('user');
-		}
-		tokenData && setToken(tokenData);
-		loggedName && setName(loggedName);
-	}, [token, name]);
+	const token = JSON.parse(getFromLocalStorage('token'));
+	const name = JSON.parse(getFromLocalStorage('user'));
 
 	useEffect(() => {
 		const getAllProducts = async () => {
@@ -57,7 +48,7 @@ const ProductsComponent = () => {
 					},
 				});
 				const data = await res.json();
-				// console.log('get users from data =>', data?.data);
+
 				setUsers(data?.data);
 			} catch (error) {
 				console.log('get error from users =>', error);
@@ -77,8 +68,7 @@ const ProductsComponent = () => {
 			</div>
 			<hr />
 			<div className='p-4 flex flex-col gap-4 lg:flex lg:flex-row w-full md:gap-8'>
-				{_?.map(
-					products,
+				{products?.map(
 					({
 						amountAvailable,
 						cost,
@@ -161,16 +151,16 @@ const ProductsComponent = () => {
 												if (userId === sellerID) {
 													return (
 														<div className='flex flex-row gap-2'>
-															<Link
+															<button
 																href='href'
 																className='text-white md:w-24 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 																Delete Item
-															</Link>
-															<Link
+															</button>
+															<button
 																href='#'
 																className='text-white md:w-24 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-2 py-2.5 lg:px-2 lg:py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 																Update Item
-															</Link>
+															</button>
 														</div>
 													);
 												} else {

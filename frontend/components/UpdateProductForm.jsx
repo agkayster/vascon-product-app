@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-// import { AuthContext } from '@/app/Providers';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -83,7 +82,7 @@ const UpdateProductForm = () => {
 			);
 
 			const data = await res.json();
-			console.log('get data from add products => ', data);
+
 			data && router.push('/products');
 		} catch (error) {
 			console.log('get add products error =>', error);
@@ -91,7 +90,7 @@ const UpdateProductForm = () => {
 		setIsLoading(false);
 	};
 
-	console.log('get stored data =>', storedProductData);
+	// console.log('get stored data =>', storedProductData);
 
 	return (
 		<div>

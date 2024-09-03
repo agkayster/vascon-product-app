@@ -4,9 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import randImage from '../../../public/assets/random-image.jpg';
+import { getFromLocalStorage } from '@/lib/utils';
 
 const SingleProductComponent = () => {
-	const [token, setToken] = useState('');
 	const [users, setUsers] = useState(null);
 	const [name, setName] = useState('');
 	const [productData, setProductData] = useState(null);
@@ -15,17 +15,8 @@ const SingleProductComponent = () => {
 	// console.log('check for params =>', params);
 	const { productID } = params;
 
-	useEffect(() => {
-		let tokenData;
-		let loggedName;
-
-		if (typeof window !== 'undefined') {
-			tokenData = localStorage.getItem('token');
-			loggedName = localStorage.getItem('user');
-		}
-		tokenData && setToken(tokenData);
-		loggedName && setName(loggedName);
-	}, [token, name]);
+	const token = JSON.parse(getFromLocalStorage('token'));
+	const loggedName = JSON.parse(getFromLocalStorage('user'));
 
 	useEffect(() => {
 		const getSingleProduct = async () => {
@@ -70,11 +61,31 @@ const SingleProductComponent = () => {
 		getAllUsers();
 	}, []);
 
-	const getLoggedInUserDetails = users?.filter(
-		({ username }) => username === name
-	);
+	const handleProductDelete = async () => {
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+				// 'Content-Type': 'application/json',
+			};
+			const res = await fetch(
+				`http://localhost:5000/api/v1/products/${productID}`,
+				{
+					method: 'DELETE',
+					headers,
+				}
+			);
 
-	// console.log('get data from state =>', productData);
+			const data = await res.json();
+			console.log('get delete msg =>', data);
+		} catch (error) {
+			console.log('get delete error =>', error);
+		}
+	};
+
+	// filter to match username who created the product to the user who is logged in
+	const getLoggedInUserDetails = users?.filter(
+		({ username }) => username === loggedName
+	);
 
 	return (
 		<div>
@@ -151,11 +162,11 @@ const SingleProductComponent = () => {
 							if (userId === productData?.sellerID) {
 								return (
 									<div className='flex flex-row gap-2'>
-										<Link
-											href='/deleteProducts'
+										<button
+											onClick={handleProductDelete}
 											className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 											Delete Item
-										</Link>
+										</button>
 										<Link
 											href='/updateProducts'
 											className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>

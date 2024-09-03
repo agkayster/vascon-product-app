@@ -1,32 +1,35 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import AddProductsForm from '@/components/AddProductsForm';
-import RegisterComponent from '../register/page';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getFromLocalStorage } from '@/lib/utils';
+import dynamic from 'next/dynamic';
+
+const AddProductsForm = dynamic(() => import('@/components/AddProductsForm'), {
+	ssr: false,
+});
+
+const RegisterComponent = dynamic(() => import('../register/page'), {
+	ssr: false,
+});
 
 const AddProductsComponent = () => {
 	const router = useRouter();
-	const [role, setRole] = useState('');
 
-	// retrieve token of authenticated user from localStorage
+	const role = JSON.parse(getFromLocalStorage('role'));
+
+	// protects the Add products route
 	useEffect(() => {
-		// let tokenData;
-		let roleData;
-
-		if (typeof window !== 'undefined') {
-			// tokenData = localStorage.getItem('token');
-			roleData = localStorage.getItem('role');
-		}
-		// tokenData && setToken(JSON.parse(tokenData));
-		roleData && setRole(JSON.parse(roleData));
-	}, []);
-
-	useEffect(() => {
-		role !== 'seller' && router.push('/register');
-	}, []);
+		role?.role !== 'seller' && router.push('/register');
+	}, [role]);
 
 	return (
-		<>{role !== 'seller' ? <RegisterComponent /> : <AddProductsForm />}</>
+		<>
+			{role?.role !== 'seller' ? (
+				<RegisterComponent />
+			) : (
+				<AddProductsForm />
+			)}
+		</>
 	);
 };
 

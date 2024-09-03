@@ -1,6 +1,5 @@
 'use client';
-import { useReducer, createContext, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useReducer, createContext } from 'react';
 
 // use Authcontext
 export const AuthContext = createContext();
@@ -23,13 +22,13 @@ const reducer = (state, actions) => {
 	const { type, payload } = actions;
 	switch (type) {
 		case ACTIONS.LOGIN:
-			localStorage.setItem('user', payload.user.name);
-			localStorage.setItem('token', payload.token);
+			localStorage.setItem('user', JSON.stringify(payload.user.name));
+			localStorage.setItem('token', JSON.stringify(payload.token));
 			localStorage.setItem(
 				'authenticated',
 				JSON.stringify({ isAuthenticated: true })
 			);
-			localStorage.setItem('role', payload.role.role);
+			localStorage.setItem('role', JSON.stringify(payload.role));
 			return {
 				...state,
 				isAuthenticated: true,
@@ -53,8 +52,8 @@ const reducer = (state, actions) => {
 };
 
 const AuthProvider = ({ children }) => {
-	// define our state and dispatch
 	const [state, dispatch] = useReducer(reducer, defaultState);
+
 	return (
 		<AuthContext.Provider value={{ state, dispatch }}>
 			{children}
