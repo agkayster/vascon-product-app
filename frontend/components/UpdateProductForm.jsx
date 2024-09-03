@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { getFromLocalStorage } from '@/lib/utils';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -27,24 +28,10 @@ const formSchema = z.object({
 
 const UpdateProductForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [token, setToken] = useState('');
-	const [productID, setProductID] = useState('');
-	const [storedProductData, setStoredProductData] = useState(null);
 
-	useEffect(() => {
-		let tokenData;
-		let productId;
-		let productData;
-
-		if (typeof window !== 'undefined') {
-			tokenData = localStorage.getItem('token');
-			productId = localStorage.getItem('productID');
-			productData = localStorage.getItem('productData');
-		}
-		tokenData && setToken(tokenData);
-		productId && setProductID(productId);
-		productData && setStoredProductData(JSON.parse(productData));
-	}, [token, productID]);
+	const token = JSON.parse(getFromLocalStorage('token'));
+	const storedProductData = JSON.parse(getFromLocalStorage('productData'));
+	const productID = JSON.parse(getFromLocalStorage('productID'));
 
 	const router = useRouter();
 
@@ -61,9 +48,6 @@ const UpdateProductForm = () => {
 	// 2. Define a submit handler.
 	const onSubmit = async ({ amountAvailable, cost, productName }) => {
 		setIsLoading(true);
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(amountAvailable, cost, productName);
 
 		try {
 			const productsData = { amountAvailable, cost, productName };
@@ -89,8 +73,6 @@ const UpdateProductForm = () => {
 		}
 		setIsLoading(false);
 	};
-
-	// console.log('get stored data =>', storedProductData);
 
 	return (
 		<div>

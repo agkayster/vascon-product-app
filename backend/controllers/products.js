@@ -107,7 +107,10 @@ const deleteSingleProduct = async (req, res) => {
 		);
 
 	// else delete
-	res.status(StatusCodes.OK).send('product deleted successfully');
+	res.status(StatusCodes.OK).json({
+		success: true,
+		msg: 'product deleted successfully',
+	});
 };
 
 export {

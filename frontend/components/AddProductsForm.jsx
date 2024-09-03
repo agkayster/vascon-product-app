@@ -32,8 +32,6 @@ const AddProductsForm = () => {
 
 	const token = JSON.parse(getFromLocalStorage('token'));
 
-	// console.log('get token =>', token);
-
 	const router = useRouter();
 
 	// 1. Define your form.

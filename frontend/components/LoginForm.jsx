@@ -29,8 +29,7 @@ const formSchema = z.object({
 
 const LoginForm = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const { dispatch, state } = useContext(AuthContext);
-	// console.log('get state in login =>', state);
+	const { dispatch } = useContext(AuthContext);
 
 	const router = useRouter();
 
@@ -46,9 +45,6 @@ const LoginForm = () => {
 	// 2. Define a submit handler. destructure value
 	const onSubmit = async ({ username, password }) => {
 		setIsLoading(true);
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		// console.log(username, password);
 
 		try {
 			const userData = { username, password };

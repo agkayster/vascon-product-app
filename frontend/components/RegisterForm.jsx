@@ -1,6 +1,5 @@
 'use client';
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { z } from 'zod';
@@ -58,9 +57,6 @@ const RegisterForm = () => {
 	// 2. Define a submit handler.
 	const onSubmit = async ({ username, password, deposit, role }) => {
 		setIsLoading(true);
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(username, password, deposit, role);
 
 		try {
 			const userData = { username, password, deposit, role };

@@ -5,14 +5,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import randImage from '../../../public/assets/random-image.jpg';
 import { getFromLocalStorage } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const SingleProductComponent = () => {
 	const [users, setUsers] = useState(null);
-	const [name, setName] = useState('');
 	const [productData, setProductData] = useState(null);
 
+	const router = useRouter();
+
 	const params = useParams();
-	// console.log('check for params =>', params);
+
 	const { productID } = params;
 
 	const token = JSON.parse(getFromLocalStorage('token'));
@@ -34,7 +36,7 @@ const SingleProductComponent = () => {
 				);
 				const data = await res.json();
 				setProductData(data?.data);
-				localStorage.setItem('productID', productID);
+				localStorage.setItem('productID', JSON.stringify(productID));
 				localStorage.setItem('productData', JSON.stringify(data?.data));
 			} catch (error) {
 				console.log('get error for single product =>', error);
@@ -65,7 +67,7 @@ const SingleProductComponent = () => {
 		try {
 			const headers = {
 				Authorization: `Bearer ${token}`,
-				// 'Content-Type': 'application/json',
+				'Content-Type': 'application/json',
 			};
 			const res = await fetch(
 				`http://localhost:5000/api/v1/products/${productID}`,
@@ -76,7 +78,8 @@ const SingleProductComponent = () => {
 			);
 
 			const data = await res.json();
-			console.log('get delete msg =>', data);
+
+			data.success === true && router.push('/products');
 		} catch (error) {
 			console.log('get delete error =>', error);
 		}
