@@ -1,11 +1,14 @@
-'use client';
-import React, { useEffect, useContext, useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Menu from './Mobile';
-import { useRouter } from 'next/navigation';
-import UserLinks from './UserLinks';
-import { AuthContext } from '@/app/Providers';
+// import UserLinks from './UserLinks';
+
+import dynamic from 'next/dynamic';
+
+const UserLinks = dynamic(() => import('./UserLinks'), {
+	ssr: false,
+});
 
 const Navbar = () => {
 	return (
@@ -24,6 +27,7 @@ const Navbar = () => {
 				<Menu />
 			</div>
 			{/* RIGHT LINKS */}
+
 			<div className='hidden md:flex gap-4 items-center justify-end flex-1 md:relative'>
 				<UserLinks />
 			</div>

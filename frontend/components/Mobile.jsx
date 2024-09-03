@@ -1,10 +1,11 @@
 'use client';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { BsArrowBarRight } from 'react-icons/bs';
 import { BsArrowBarLeft } from 'react-icons/bs';
 import { ACTIONS, AuthContext } from '@/app/Providers';
 import { useRouter } from 'next/navigation';
+import { getFromLocalStorage } from '@/lib/utils';
 
 const links = [
 	{
@@ -18,6 +19,11 @@ const links = [
 		title: 'Contact',
 		url: '/contact',
 	},
+	{
+		id: 3,
+		title: 'Products',
+		url: '/products',
+	},
 ];
 
 const Menu = () => {
@@ -29,14 +35,8 @@ const Menu = () => {
 
 	const router = useRouter();
 
-	useEffect(() => {
-		let authData;
-		if (typeof window !== 'undefined') {
-			authData = localStorage.getItem('authenticated');
-		}
-		setAuth(JSON.parse(authData));
-		// always add state changes in useEffect, to check if state has changed
-	}, []);
+	const authData = JSON.parse(getFromLocalStorage('authenticated'));
+	// console.log('get auth data =>', authData);
 
 	const handleMobileBurgerResponse = () => {
 		setOpen(!open);
@@ -45,6 +45,7 @@ const Menu = () => {
 	const handleLogout = () => {
 		dispatch({ type: ACTIONS.LOGOUT });
 		router.push('/');
+		// location.reload();
 		setOpen(false);
 	};
 
@@ -72,7 +73,7 @@ const Menu = () => {
 							{title}
 						</Link>
 					))}
-					{!auth?.isAuthenticated ? (
+					{!authData?.isAuthenticated ? (
 						<>
 							<Link href='/login' onClick={() => setOpen(false)}>
 								Login

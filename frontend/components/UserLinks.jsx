@@ -3,24 +3,14 @@ import React, { useContext, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ACTIONS, AuthContext } from '@/app/Providers';
 import { useRouter } from 'next/navigation';
+import { getFromLocalStorage } from '@/lib/utils';
 
 const UserLinks = () => {
 	const { dispatch } = useContext(AuthContext);
 
 	const router = useRouter();
 
-	const [auth, setAuth] = useState(null);
-
-	useEffect(() => {
-		let authData;
-		if (typeof window !== 'undefined') {
-			authData = localStorage.getItem('authenticated');
-		}
-		if (authData) {
-			setAuth(JSON.parse(authData));
-		}
-		// always add state changed to useEffect
-	}, []);
+	const authData = JSON.parse(getFromLocalStorage('authenticated'));
 
 	const handleLogout = () => {
 		dispatch({ type: ACTIONS.LOGOUT });
@@ -29,7 +19,7 @@ const UserLinks = () => {
 
 	return (
 		<div>
-			{!auth?.isAuthenticated ? (
+			{!authData?.isAuthenticated ? (
 				<Link href='/login'>Login</Link>
 			) : (
 				<div className='flex flex-row'>
