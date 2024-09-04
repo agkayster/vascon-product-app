@@ -1,18 +1,21 @@
 'use client';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import _ from 'lodash';
 import Image from 'next/image';
 import randImage from '../../public/assets/random-image.jpg';
 import { getFromLocalStorage } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 const ProductsComponent = () => {
 	const [products, setProducts] = useState(null);
-
 	const [users, setUsers] = useState(null);
+
+	const router = useRouter();
 
 	const token = JSON.parse(getFromLocalStorage('token'));
 	const name = JSON.parse(getFromLocalStorage('user'));
+	const productID = JSON.parse(getFromLocalStorage('productID'));
 
 	useEffect(() => {
 		const getAllProducts = async () => {
@@ -56,6 +59,28 @@ const ProductsComponent = () => {
 		};
 		getAllUsers();
 	}, []);
+
+	const handleProductDelete = async () => {
+		try {
+			const headers = {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			};
+			const res = await fetch(
+				`http://localhost:5000/api/v1/products/${productID}`,
+				{
+					method: 'DELETE',
+					headers,
+				}
+			);
+
+			const data = await res.json();
+
+			data.success === true && router.refresh();
+		} catch (error) {
+			console.log('get delete error =>', error);
+		}
+	};
 
 	const getLoggedInUserDetails = users?.filter(
 		({ username }) => username === name
@@ -151,13 +176,15 @@ const ProductsComponent = () => {
 												if (userId === sellerID) {
 													return (
 														<div className='flex flex-row gap-2'>
-															<button
-																href='href'
+															{/* <button
+																onClick={
+																	handleProductDelete
+																}
 																className='text-white md:w-24 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-2 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 																Delete Item
-															</button>
+															</button> */}
 															<button
-																href='#'
+																href='/updateProducts'
 																className='text-white md:w-24 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-xl text-sm px-2 py-2.5 lg:px-2 lg:py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'>
 																Update Item
 															</button>

@@ -28,15 +28,11 @@ const links = [
 
 const Menu = () => {
 	const [open, setOpen] = useState(false);
-	const [loaded, setLoaded] = useState(true);
-	const [user, setUser] = useState('');
-	const [auth, setAuth] = useState(null);
 	const { dispatch } = useContext(AuthContext);
 
 	const router = useRouter();
 
 	const authData = JSON.parse(getFromLocalStorage('authenticated'));
-	// console.log('get auth data =>', authData);
 
 	const handleMobileBurgerResponse = () => {
 		setOpen(!open);
@@ -45,7 +41,6 @@ const Menu = () => {
 	const handleLogout = () => {
 		dispatch({ type: ACTIONS.LOGOUT });
 		router.push('/');
-		// location.reload();
 		setOpen(false);
 	};
 

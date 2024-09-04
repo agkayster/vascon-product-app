@@ -1,8 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import Menu from './Mobile';
-// import UserLinks from './UserLinks';
 
 import dynamic from 'next/dynamic';
 
